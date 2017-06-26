@@ -1,4 +1,4 @@
-def traitement_search_result_linkedin_premium(chaine):
+def traitement_search_result_lkd_recruiter(chaine):
 
     count=0
 
