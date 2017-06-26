@@ -1,21 +1,33 @@
-def traitement_search_linkedin_premium(chaine):
+def traitement_search_result_linkedin_premium(chaine):
+
+    import time
+    import sys
+    
+    taille_obj = sys.getsizeof(chaine)
+    
+    start = time.time()
 
     count=0
 
-    def donner_numero_manipulation(count):
+
+    def donner_numero_manipulation(count, fonction):
         count+=1
-        print("Manip n* {}".format(count))
+        print("Manip n* {} : {}".format(count, 
+              str(fonction.__name__).replace("_", " ")))
         return count
 
-    def supprimer_les_etoiles(chaine) # On enleve les ***** - OK
+
+    def supprimer_les_etoiles(chaine): # On enleve les ***** - OK
         chaine = chaine.replace("*****", "").replace("****", "")
         return chaine
 
-    def rajouter_1er_ligne_et_supprimer_blanck(chaine) # OK
+
+    def rajouter_1er_ligne_et_supprimer_blanck(chaine) :# OK
         liste = chaine.split("\n"); 
         liste.insert(1,"NFA"); 
-        liste =  [i.strip() for i in li if i]
+        liste =  [i.strip() for i in liste if i]
         return liste
+
      
     def creer_liste_de_liste(liste): # OK 
         liste2, sous_liste = list(), list()
@@ -26,29 +38,36 @@ def traitement_search_linkedin_premium(chaine):
                 sous_liste = list()
             else : 
                 sous_liste.append(j)
-        return liste2           
+        return liste2
+
 
     def creation_ID(liste): # OK
         for i,j in enumerate(liste):
             liste[i][0] = str(i) # --> forcément besoin de str et pas de int ???
         return liste
 
+
     def separer_nom_num_reseau(liste): # OK +/-
         #On part la dessus mais on a un Gros PB ! Qui de si la personne n'est pas en réseau 1 / 2 / 3 ???? - OK MAIS à REVOIR
-        for i,_ in enumerate(liste): 
-            if "\t" in liste[i][1]: 
-                liste[i][1] = liste[i][1][:liste[i][1].find("\t")].strip()  
+        for i,j in enumerate(liste): 
+            char_list = ["1er","2e","3e"]
+            for char in char_list : 
+                if char in liste[i][1]: 
+                    liste[i][1] = liste[i][1][:liste[i][1].find(char)].strip()  
         return liste
+
 
     def suppression_titre_sous_nom_useless(liste): # OK
         for i,j in enumerate(liste) : 
             liste[i].pop(2)
         return liste
+
     
     def supprimer_actruellement(liste): # OK
         for i,j in enumerate(liste) : 
             liste[i].pop(3)
         return liste
+
     
     def separer_metier_sste_anciennete(liste): # OK
         
@@ -84,12 +103,14 @@ def traitement_search_linkedin_premium(chaine):
         
         return liste
 
+
     def supprimer_pays_secteur(liste): # OK
         char = ","
         for i, j in enumerate(liste): #
             if char in  liste[i][2] : 
                 liste[i][2] = liste[i][2][:liste[i][2].find(char)]
         return liste
+
 
     def separer_formation_annee_diplome(liste): # OK
         for i, j in enumerate(liste):
@@ -103,23 +124,32 @@ def traitement_search_linkedin_premium(chaine):
                 liste[i].insert(6,"?")
                 liste[i].insert(7,"?")
         return liste
+
     
     def supprimer_champs_inutiles(liste): # EN COURS   
-        for chaine in ['relations en ', 'relation en', 'Enregistrer dans']
-            nb = -1
+        for chaine in ['relations en', 'relation en', 'Enregistrer dans']:
+            
             for i, j in enumerate(liste): 
+                nb = list()
                 for k,l in enumerate(liste[i]):
                     if chaine in l :
-                        nb = k    
-        
-        nb = -1      
+                        nb.append(k)
+                if nb : 
+                    for k in nb : 
+                        liste[i].pop(k)
+                        
         for i, j in enumerate(liste): 
+            nb = list()
             for k,l in enumerate(liste[i]):
                 if "Plus" == l :
-                    nb = k
-        if nb>0 : liste[i].pop(nb)
+                    nb.append(k)
+                
+            """if nb :
+                for k in nb : ------------->>>>>>>>>>>>>> WTF ?????
+                    liste[i].pop(k)"""  
 
         return liste
+
 
     def stripper_le_reste_des_champs(liste):
         for i, j in enumerate(liste):
@@ -127,6 +157,19 @@ def traitement_search_linkedin_premium(chaine):
             liste[i][8] = "; ".join(liste[i][8: ])
             liste[i][9:] = []
         return liste
+        
+        
+    def rajouter_source(liste, source="Linkedin"):
+        for i,j in enumerate(liste):
+            liste[i].insert(2,str(source))
+        return liste
+        
+
+    def rajouter_champs_titres(liste):
+        titres = ["ID", "Prenom NOM", "source", "Localisation", "Poste", "Ssté", "Date ssté", "formation", "date fomration", "commentaires"]
+        liste.insert(0, titres)
+        return liste
+
  
     def formatage_csv(liste):
         for i,j in enumerate(liste):     # PAS DE VIGULES DANS UN CSV 
@@ -139,6 +182,7 @@ def traitement_search_linkedin_premium(chaine):
             chaine+="\n"
         
         return chaine
+
     
     ########################################################################
 
@@ -157,9 +201,15 @@ def traitement_search_linkedin_premium(chaine):
         supprimer_pays_secteur,
         separer_formation_annee_diplome, 
         supprimer_champs_inutiles, 
-        stripper_le_reste_des_champs, 
+        stripper_le_reste_des_champs,
+        rajouter_source,
+        rajouter_champs_titres,
         formatage_csv] : 
             element = fonction(element)
-            count = donner_numero_manipulation(count)
+            count = donner_numero_manipulation(count, fonction)
+            
+    stop = time.time()
+    print("vitesse = {}, soit {} char par secondes".format(
+    round(stop-start,3), round(taille_obj/(stop-start),3)))
+    return element
 
-    return elem
