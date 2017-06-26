@@ -1,4 +1,4 @@
-def traitement_search_result_lkd_premium(chaine):
+def traitement_search_result_lkd_recruiter(chaine):
 
     import time
     import sys
@@ -159,7 +159,7 @@ def traitement_search_result_lkd_premium(chaine):
         return liste
         
         
-    def rajouter_source(liste, source="Linkedin"):
+    def rajouter_source(liste, source="lkd"):
         for i,j in enumerate(liste):
             liste[i].insert(2,str(source))
         return liste
