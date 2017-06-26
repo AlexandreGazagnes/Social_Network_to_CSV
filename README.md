@@ -21,9 +21,11 @@ NEXT MAIN STEPS :
   - continue to linkedin with : 
     - linkedin recruiter projet
     - linkedin recruiter search tool (not result)
-    - viadeo 
+    - linkedin free search
+    - linkedin premiuum searc result
+    - Viadeo 
     - Xing 
-    - etc etc
+    - 
     
   
   
