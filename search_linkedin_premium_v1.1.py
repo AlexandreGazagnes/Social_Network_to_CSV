@@ -174,12 +174,11 @@ def traitement_search_result_linkedin_premium(chaine):
     def formatage_csv(liste):
         for i,j in enumerate(liste):     # PAS DE VIGULES DANS UN CSV 
             for k,l in enumerate(liste[i]):
-                liste[i][k] = liste[i][k].replace(",", " - ") 
+                liste[i][k] = liste[i][k].replace(",", "-").replace(", ", "-") 
 
         chaine = str()     # COMPILE EN CSV
         for i in liste:     
-            chaine += ", ".join(i)
-            chaine+="\n"
+            chaine += ", ".join(i) +"\n"
         
         return chaine
 
@@ -212,4 +211,3 @@ def traitement_search_result_linkedin_premium(chaine):
     print("vitesse = {}, soit {} char par secondes".format(
     round(stop-start,3), round(taille_obj/(stop-start),3)))
     return element
-
