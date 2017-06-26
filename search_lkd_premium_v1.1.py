@@ -1,4 +1,4 @@
-def traitement_search_result_linkedin_premium(chaine):
+def traitement_search_result_lkd_premium(chaine):
 
     import time
     import sys
