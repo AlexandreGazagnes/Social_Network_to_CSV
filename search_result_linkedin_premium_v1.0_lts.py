@@ -2,9 +2,10 @@ def traitement_search_result_linkedin_premium(chaine):
 
     count=0
 
-    def donner_numero_manipulation(count):
+    def donner_numero_manipulation(count, fonction):
         count+=1
-        print("Manip n* {}".format(count))
+        print("Manip n* {} : {}"
+            .format(count, str(fonction.__name__).replace("_", " ")))
         return count
 
     def supprimer_les_etoiles(chaine): # On enleve les ***** - OK
@@ -35,9 +36,11 @@ def traitement_search_result_linkedin_premium(chaine):
 
     def separer_nom_num_reseau(liste): # OK +/-
         #On part la dessus mais on a un Gros PB ! Qui de si la personne n'est pas en réseau 1 / 2 / 3 ???? - OK MAIS à REVOIR
-        for i,_ in enumerate(liste): 
-            if "\t" in liste[i][1]: 
-                liste[i][1] = liste[i][1][:liste[i][1].find("\t")].strip()  
+        for i,j in enumerate(liste): 
+            char_list = ["1er","2e","3e"]
+            for char in char_list : 
+                if char in liste[i][1]: 
+                    liste[i][1] = liste[i][1][:liste[i][1].find(char)].strip()  
         return liste
 
     def suppression_titre_sous_nom_useless(liste): # OK
@@ -105,19 +108,26 @@ def traitement_search_result_linkedin_premium(chaine):
         return liste
     
     def supprimer_champs_inutiles(liste): # EN COURS   
-        for chaine in ['relations en ', 'relation en', 'Enregistrer dans']:
-            nb = -1
+        for chaine in ['relations en', 'relation en', 'Enregistrer dans']:
+            
             for i, j in enumerate(liste): 
+                nb = list()
                 for k,l in enumerate(liste[i]):
                     if chaine in l :
-                        nb = k    
-        
-        nb = -1      
+                        nb.append(k)
+                if nb : 
+                    for k in nb : 
+                        liste[i].pop(k)
+                        
         for i, j in enumerate(liste): 
+            nb = list()
             for k,l in enumerate(liste[i]):
                 if "Plus" == l :
-                    nb = k
-        if nb>0 : liste[i].pop(nb)
+                    nb.append(k)
+                
+            """if nb :
+                for k in nb : 
+                    liste[i].pop(k)"""
 
         return liste
 
@@ -160,6 +170,6 @@ def traitement_search_result_linkedin_premium(chaine):
         stripper_le_reste_des_champs, 
         formatage_csv] : 
             element = fonction(element)
-            count = donner_numero_manipulation(count)
+            count = donner_numero_manipulation(count, fonction)
 
     return element
