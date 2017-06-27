@@ -12,14 +12,15 @@ def traitement_search_result_lkd_recruiter(chaine):
 
     def donner_numero_manipulation(count, fonction):
         count+=1
-        print("Manip n* {} : {}".format(count, 
+        nb = 2 if count<10 else 1 
+        print("Manip n*{}{}: {}".format(count, nb * " ", 
               str(fonction.__name__).replace("_", " ")))
         return count
 
 
     def formatage_taille(nb):
     
-      for i,j in ((1000000000,"Go"), (1000000,"Mo"), (1000, "Ko"), (1,"o")) : 
+      for i,j in ((1_000_000_000,"Go"), (1_000_000,"Mo"), (1_000, "Ko"), (1,"o")) : 
         if nb>i : return i,j
 
 
@@ -59,20 +60,20 @@ def traitement_search_result_lkd_recruiter(chaine):
 
 
     def suppression_champs_inutiles(liste): # OK
-        for i,j in enumerate(liste) : # supprimer le "titre" useless
+        for i,_ in enumerate(liste) : # supprimer le "titre" useless
             liste[i].pop(2)
             
         for char in  ["Plus", "Actuellement", "1 projet", "2 projets", "3 projets"]: # suppression d'elemennts "== "
-          for i,j in enumerate(liste) :
+          for i,_ in enumerate(liste) :
             for k,l in enumerate(liste[i]): 
               if liste[i][k] == char : 
                 liste[i].pop(k)
               
-        for chaine in ['relations en', 'relation en', 'Enregistrer dans']:# suppression d'elemennts "in"
-            for i, j in enumerate(liste): 
+        for char in ['relations en', 'relation en', 'Enregistrer dans']:# suppression d'elemennts "in"
+            for i, _ in enumerate(liste): 
                 nb = list()
                 for k,l in enumerate(liste[i]):
-                    if chaine in l :
+                    if char in l :
                         nb.append(k)
                 if nb : 
                     for k in nb : 
@@ -80,7 +81,6 @@ def traitement_search_result_lkd_recruiter(chaine):
                         
         return liste
 
-    
 
     def separer_metier_sste_anciennete(liste): # OK
         
@@ -141,7 +141,6 @@ def traitement_search_result_lkd_recruiter(chaine):
 
     def stripper_le_reste_des_champs(liste):
         for i, j in enumerate(liste):
-            lon = len(j)
             liste[i][8] = "; ".join(liste[i][8: ])
             liste[i][9:] = []
         return liste
@@ -157,7 +156,7 @@ def traitement_search_result_lkd_recruiter(chaine):
         
 
     def rajouter_champs_titres(liste):
-        titres = ["ID", "Prenom NOM", "source", "Localisation", "Poste", "Ssté", "Date ssté", "formation", "date fomration", "commentaires"]
+        titres = ["ID", "Prenom NOM","date", "source", "Localisation", "Poste", "Ssté", "Date ssté", "formation", "date fomration", "commentaires"]
         liste.insert(0, titres)
         return liste
 
@@ -202,7 +201,8 @@ def traitement_search_result_lkd_recruiter(chaine):
     coef, appel = formatage_taille(taille_obj)
     
     print("vitesse = {}, soit {} {} par secondes".format(
-      round(stop-start,4), round((taille_obj/coef)/(stop-start),4),appel))
+      round(stop-start,4), round((taille_obj/coef)/(stop-start)),appel))
     
     return element
+    
     
