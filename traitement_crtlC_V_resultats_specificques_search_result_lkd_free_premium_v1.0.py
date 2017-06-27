@@ -1,4 +1,4 @@
-def traitement_crtlC_V_resultats_specificques_search_linkedin_free_premium(chaine):
+def traitement_crtlC_V_resultats_specificques_search_result_lkd_free_premium(chaine):
   """
   EN COURS
   """
