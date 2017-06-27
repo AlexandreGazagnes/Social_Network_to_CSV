@@ -17,12 +17,8 @@ def traitement_search_result_lkd_recruiter(chaine):
         return count
 
 
-    def supprimer_les_etoiles(chaine): # On enleve les ***** - OK
+    def supprimer_les_etoiles_et_blanck(chaine): # On enleve les ***** - OK
         chaine = chaine.replace("*****", "").replace("****", "")
-        return chaine
-
-
-    def rajouter_1er_ligne_et_supprimer_blanck(chaine) :# OK
         liste = chaine.split("\n"); 
         liste.insert(1,"NFA"); 
         liste =  [i.strip() for i in liste if i]
@@ -48,18 +44,23 @@ def traitement_search_result_lkd_recruiter(chaine):
 
 
     def separer_nom_num_reseau(liste): # OK +/-
-        #On part la dessus mais on a un Gros PB ! Qui de si la personne n'est pas en réseau 1 / 2 / 3 ???? - OK MAIS à REVOIR
         for i,j in enumerate(liste): 
             char_list = ["1er","2e","3e"]
             for char in char_list : 
                 if char in liste[i][1]: 
-                    liste[i][1] = liste[i][1][:liste[i][1].find(char)].strip()  
+                    liste[i][1] = liste[i][1][:liste[i][1].find(char)].strip() 
         return liste
 
 
-    def suppression_titre_sous_nom_useless(liste): # OK
+    def suppression_titre_useless_et_plus(liste): # OK
         for i,j in enumerate(liste) : 
             liste[i].pop(2)
+        
+        for i,j in enumerate(liste) :
+          for k,l in enumerate(liste[i]): 
+            if liste[i][k] == "Plus" : 
+              liste[i].pop(k)
+
         return liste
 
     
@@ -191,10 +192,9 @@ def traitement_search_result_lkd_recruiter(chaine):
 
 
     for fonction in [
-        supprimer_les_etoiles, 
-        rajouter_1er_ligne_et_supprimer_blanck, 
+        supprimer_les_etoiles_et_blanck, 
         creer_liste_de_liste, creation_ID, separer_nom_num_reseau, 
-        suppression_titre_sous_nom_useless, 
+        suppression_titre_useless_et_plus, 
         supprimer_actruellement, 
         separer_metier_sste_anciennete,
         supprimer_pays_secteur,
@@ -211,3 +211,4 @@ def traitement_search_result_lkd_recruiter(chaine):
     print("vitesse = {}, soit {} char par secondes".format(
     round(stop-start,3), round(taille_obj/(stop-start),3)))
     return element
+    
