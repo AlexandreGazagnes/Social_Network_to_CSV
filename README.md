@@ -9,13 +9,16 @@ it could be used as a standable program of course, but it has to be integrated t
 
 
 This this fist library can be easily update : 
-  - lots of cleaning before processing ("Plus", "12 Relations", "Enregistrer dans un projet") it coul be  great accelator for the program speed
+  - lots of cleaning before processing ("Plus", "12 Relations", "Enregistrer dans un projet") it coul be  great accelator for the program speed --- > OK ? 
   - Bunch of code can be factorised, for exemple the separtors "job - Company", or "Fomation - year"...
   etc etc
-  -  IT IS lkd RECRUITER AND NOT PREMUIM !!!!
   - few bugs have to be corected in the current algo
   - make a standable programm
   
+  
+average rate speed 13 000 ko/s
+
+
 NEXT MAIN STEPS : 
   - validate and check various config for the toom
   - continue to lkd with : 
