@@ -1,4 +1,9 @@
-def traitement_search_result_lkd_recruiter(chaine):
+def traitement_crtlC_V_resultats_specifiques_search_result_lkd_recruiter(chaine):
+    
+    """input : les la chaine concaténée avec des "*****" ou pas des résultats d'une search linkedin recruiter
+    ndlr, que les resultats copiez collez à la mano, pas de crtlA de l'ensemble de la page
+    ndlr pas dans un projet, mais juste la pages de résultats
+    output : une chaine en format csv"""
 
     import time
     import sys
@@ -6,7 +11,7 @@ def traitement_search_result_lkd_recruiter(chaine):
     taille_obj = sys.getsizeof(chaine)
     
     start = time.time()
-
+    
     count=0
 
 
@@ -27,7 +32,7 @@ def traitement_search_result_lkd_recruiter(chaine):
     def supprimer_les_etoiles_et_blanck(chaine): # On enleve les ***** - OK
         chaine = chaine.replace("*****", "").replace("****", "")
         liste = chaine.split("\n"); 
-        liste.insert(1,"NFA"); 
+        liste.insert(0,"NFA"); 
         liste =  [i.strip() for i in liste if i]
         return liste
 
@@ -204,5 +209,4 @@ def traitement_search_result_lkd_recruiter(chaine):
       round(stop-start,4), round((taille_obj/coef)/(stop-start)),appel))
     
     return element
-    
     
