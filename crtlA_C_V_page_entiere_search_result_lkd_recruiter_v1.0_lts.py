@@ -1,7 +1,8 @@
 def traitement_crtlA_C_V_page_entiere_search_result_lkd_recruiter(chaine):
-  traitement_crtlA_C_V_page_entiere_search_result_lkd_recruiter_v1.1_lts.py
-  """ input Le CrtlA_C_V de l'ensemble d'une page de résultat linkedin recruiter, search et pas projet attention :) 
-  output : une chaine avec uniquement les réusltats expolitatbles de la search : la chaine de caracteres nom prenom poste etc etc"""
+  """
+  input Le CrtlA_C_V de l'ensemble d'une page de résultat linkedin recruiter, search et pas projet attention :) 
+  output : une chaine avec uniquement les réusltats expolitatbles de la search : la chaine de caracteres nom prenom poste etc etc
+  """
 
   fin_debut = "Sélectionner tous les résultats de recherche" 
   if fin_debut in chaine :  # on enleve tout le debut useless
