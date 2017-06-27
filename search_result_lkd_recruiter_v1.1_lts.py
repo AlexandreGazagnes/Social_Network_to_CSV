@@ -17,6 +17,12 @@ def traitement_search_result_lkd_recruiter(chaine):
         return count
 
 
+    def formatage_taille(nb):
+    
+      for i,j in ((1000000000,"Go"), (1000000,"Mo"), (1000, "Ko"), (1,"o")) : 
+        if nb>i : return i,j
+
+
     def supprimer_les_etoiles_et_blanck(chaine): # On enleve les ***** - OK
         chaine = chaine.replace("*****", "").replace("****", "")
         liste = chaine.split("\n"); 
@@ -52,24 +58,30 @@ def traitement_search_result_lkd_recruiter(chaine):
         return liste
 
 
-    def suppression_titre_useless_et_plus(liste): # OK
-        for i,j in enumerate(liste) : 
+    def suppression_champs_inutiles(liste): # OK
+        for i,j in enumerate(liste) : # supprimer le "titre" useless
             liste[i].pop(2)
-        
-        for i,j in enumerate(liste) :
-          for k,l in enumerate(liste[i]): 
-            if liste[i][k] == "Plus" : 
-              liste[i].pop(k)
-
+            
+        for char in  ["Plus", "Actuellement", "1 projet", "2 projets", "3 projets"]: # suppression d'elemennts "== "
+          for i,j in enumerate(liste) :
+            for k,l in enumerate(liste[i]): 
+              if liste[i][k] == char : 
+                liste[i].pop(k)
+              
+        for chaine in ['relations en', 'relation en', 'Enregistrer dans']:# suppression d'elemennts "in"
+            for i, j in enumerate(liste): 
+                nb = list()
+                for k,l in enumerate(liste[i]):
+                    if chaine in l :
+                        nb.append(k)
+                if nb : 
+                    for k in nb : 
+                        liste[i].pop(k)
+                        
         return liste
 
     
-    def supprimer_actruellement(liste): # OK
-        for i,j in enumerate(liste) : 
-            liste[i].pop(3)
-        return liste
 
-    
     def separer_metier_sste_anciennete(liste): # OK
         
         char = "chez" # sachant que char peut aussi valoir @ ou at
@@ -126,31 +138,6 @@ def traitement_search_result_lkd_recruiter(chaine):
                 liste[i].insert(7,"?")
         return liste
 
-    
-    def supprimer_champs_inutiles(liste): # EN COURS   
-        for chaine in ['relations en', 'relation en', 'Enregistrer dans']:
-            
-            for i, j in enumerate(liste): 
-                nb = list()
-                for k,l in enumerate(liste[i]):
-                    if chaine in l :
-                        nb.append(k)
-                if nb : 
-                    for k in nb : 
-                        liste[i].pop(k)
-                        
-        for i, j in enumerate(liste): 
-            nb = list()
-            for k,l in enumerate(liste[i]):
-                if "Plus" == l :
-                    nb.append(k)
-                
-            """if nb :
-                for k in nb : ------------->>>>>>>>>>>>>> WTF ?????
-                    liste[i].pop(k)"""  
-
-        return liste
-
 
     def stripper_le_reste_des_champs(liste):
         for i, j in enumerate(liste):
@@ -160,9 +147,12 @@ def traitement_search_result_lkd_recruiter(chaine):
         return liste
         
         
-    def rajouter_source(liste, source="lkd"):
+    def rajouter_source_et_date(liste, source="lkd",t=time.localtime()):
         for i,j in enumerate(liste):
             liste[i].insert(2,str(source))
+        
+        for i,j in enumerate(liste):
+          liste[i].insert(2, "{}/{}/{}".format(t.tm_mday,t.tm_mon, t.tm_year) )
         return liste
         
 
@@ -173,6 +163,11 @@ def traitement_search_result_lkd_recruiter(chaine):
 
  
     def formatage_csv(liste):
+      
+        for i,j in enumerate(liste): #un strip necessaire
+          for k, l in enumerate(liste[i]):
+            liste[i][k] = liste[i][k].strip()
+            
         for i,j in enumerate(liste):     # PAS DE VIGULES DANS UN CSV 
             for k,l in enumerate(liste[i]):
                 liste[i][k] = liste[i][k].replace(",", "-").replace(", ", "-") 
@@ -183,32 +178,31 @@ def traitement_search_result_lkd_recruiter(chaine):
         
         return chaine
 
-    
     ########################################################################
-
 
     element = chaine
     del chaine
 
-
     for fonction in [
         supprimer_les_etoiles_et_blanck, 
         creer_liste_de_liste, creation_ID, separer_nom_num_reseau, 
-        suppression_titre_useless_et_plus, 
-        supprimer_actruellement, 
+        suppression_champs_inutiles, 
         separer_metier_sste_anciennete,
         supprimer_pays_secteur,
         separer_formation_annee_diplome, 
-        supprimer_champs_inutiles, 
         stripper_le_reste_des_champs,
-        rajouter_source,
+        rajouter_source_et_date,
         rajouter_champs_titres,
         formatage_csv] : 
             element = fonction(element)
             count = donner_numero_manipulation(count, fonction)
             
     stop = time.time()
-    print("vitesse = {}, soit {} char par secondes".format(
-    round(stop-start,3), round(taille_obj/(stop-start),3)))
+    
+    coef, appel = formatage_taille(taille_obj)
+    
+    print("vitesse = {}, soit {} {} par secondes".format(
+      round(stop-start,4), round((taille_obj/coef)/(stop-start),4),appel))
+    
     return element
     
